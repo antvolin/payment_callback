@@ -28,9 +28,9 @@ class Transaction_handler
             $this->CI->load->library('session');
             $this->CI->session->set_flashdata($transactionData);
 
-            redirect('/sorry');
+            redirect('/page/sorry');
         } else {
-            redirect('/thank-you');
+            redirect('/page/thank_you');
         }
     }
 }
