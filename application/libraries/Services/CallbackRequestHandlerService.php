@@ -98,10 +98,9 @@ class CallbackRequestHandlerService
     private function createOrderService(array $request): OrderService
     {
         $order = null;
-        $orderFactory = new OrderFactory();
 
         try {
-            $order = $orderFactory->create($request['order']);
+            $order = (new OrderFactory())->create($request['order']);
         } catch (Exception $e) {
             $this->logError($e);
         }
@@ -117,10 +116,9 @@ class CallbackRequestHandlerService
     private function createTransaction(array $request): Transaction
     {
         $transaction = null;
-        $transactionFactory = new TransactionFactory();
 
         try {
-            $transaction = $transactionFactory->create($request['transaction']);
+            $transaction = (new TransactionFactory())->create($request['transaction']);
         } catch (Exception $e) {
             $this->logError($e);
         }
