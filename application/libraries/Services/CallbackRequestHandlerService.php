@@ -31,15 +31,9 @@ class CallbackRequestHandlerService
     {
         $requestData = $this->getRequestData();
         $this->validateRequestDataParams($requestData);
-
-        try {
-            $this->createOrderService($requestData)->updateOrder();
-        } catch (Exception $e) {
-            $this->logError($e);
-        }
+        $this->updateOrder($requestData);
 
         $transaction = $this->createTransaction($requestData);
-
         if ('fail' === $transaction->getStatus()->getValue()) {
             $strategy = new FailPayStrategy($transaction);
         } else {
@@ -81,6 +75,18 @@ class CallbackRequestHandlerService
         }
         if (!isset($request['order'])) {
             $this->logError(new NotFoundOrderInformationException());
+        }
+    }
+
+    /**
+     * @param array $requestData
+     */
+    private function updateOrder(array $requestData): void
+    {
+        try {
+            $this->createOrderService($requestData)->updateOrder();
+        } catch (Exception $e) {
+            $this->logError($e);
         }
     }
 
