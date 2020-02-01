@@ -1,6 +1,10 @@
 <?php
 
-class Order_model extends CI_Model
+namespace Model;
+
+use CI_Model;
+
+class OrderModel extends CI_Model
 {
     public string $status;
 

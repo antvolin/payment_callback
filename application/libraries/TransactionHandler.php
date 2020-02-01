@@ -1,18 +1,21 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Transaction_handler
+namespace Lib;
+
+use CI_Controller;
+
+class TransactionHandler
 {
     protected CI_Controller $CI;
     private Transaction $transaction;
 
     /**
-     * @param array $data
+     * @param Transaction $transaction
      */
-    public function __construct(array $data)
+    public function __construct(Transaction $transaction)
     {
         $this->CI =& get_instance();
-        $this->transaction = $data['transaction'];
+        $this->transaction = $transaction;
     }
 
     public function handle(): void

@@ -1,4 +1,8 @@
 <?php
+
+use Lib\RequestHandler;
+use Lib\TransactionHandler;
+
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Api extends CI_Controller
@@ -7,10 +11,12 @@ class Api extends CI_Controller
     {
         $this->load->helper('url');
 
-        $this->load->library('request_handler', ['requestData' => $this->input->get('requestData')]);
-        $transaction = $this->request_handler->handle();
+        $requestData = $this->input->get('requestData');
 
-        $this->load->library('transaction_handler', ['transaction' => $transaction]);
-        $this->transaction_handler->handle();
+        $requestHandler = new RequestHandler($requestData);
+        $transaction = $requestHandler->handle();
+
+        $transactionHandler = new TransactionHandler($transaction);
+        $transactionHandler->handle();
 	}
 }
