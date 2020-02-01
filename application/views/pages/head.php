@@ -1,10 +1,8 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
-?><!DOCTYPE html>
-<html lang="en">
-<head>
+?><head>
     <meta charset="utf-8">
-    <title>Transaction failed</title>
+    <title>Transaction success</title>
     <style type="text/css">
         body {
             background-color: #fff;
@@ -31,14 +29,3 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         }
     </style>
 </head>
-<body>
-<div id="container">
-    <h1>Sorry, the transaction failed!</h1>
-    <div id="body">
-        <p>Transaction #:<?php echo $transactionId; ?></p>
-        <p>Transaction operation:<?php echo $transactionOperation; ?></p>
-        <p>Transaction status:<?php echo $transactionStatus; ?></p>
-    </div>
-</div>
-</body>
-</html>

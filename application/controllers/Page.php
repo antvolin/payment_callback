@@ -13,11 +13,11 @@ class Page extends CI_Controller
             'transactionStatus' => $this->session->userdata('transaction_status'),
         ];
 
-        $this->load->view('sorry', $templateParams);
+        $this->load->view('pages/sorry', $templateParams);
 	}
 
 	public function thank_you(): void
     {
-        $this->load->view('thank_you');
+        $this->load->view('pages/thank_you');
     }
 }

@@ -23,8 +23,7 @@
 	},
 	"autoload": {
 		"psr-4": {
-			"Lib\\": "application/libraries",
-			"Model\\": "application/models"
+			"Lib\\": "application/libraries/"
 		}
 	},
 	"autoload-dev": {
