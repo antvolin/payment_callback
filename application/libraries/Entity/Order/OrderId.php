@@ -6,6 +6,7 @@ use Lib\Exception\EmptyOrderIdException;
 
 class OrderId
 {
+    public const ID_DB_FIELD_SIZE = 16;
     private string $value;
 
     /**

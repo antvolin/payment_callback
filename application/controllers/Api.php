@@ -1,8 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-use Lib\Services\RequestHandlerService;
-use Lib\Services\TransactionHandlerService;
+use Lib\Services\CallbackRequestHandlerService;
 
 class Api extends CI_Controller
 {
@@ -11,10 +10,7 @@ class Api extends CI_Controller
         $this->load->helper('url');
         $requestData = $this->input->get('requestData');
 
-        $requestHandler = new RequestHandlerService($requestData);
-        $requestData = $requestHandler->handle();
-
-        $transactionHandler = new TransactionHandlerService($requestData);
-        $transactionHandler->handle();
+        $requestHandler = new CallbackRequestHandlerService($requestData);
+        $requestHandler->handle();
 	}
 }

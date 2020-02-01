@@ -2,10 +2,6 @@
 
 namespace Lib\Entity\Transaction;
 
-use Lib\Exception\EmptyTransactionIdException;
-use Lib\Exception\EmptyTransactionOperationException;
-use Lib\Exception\EmptyTransactionStatusException;
-
 class Transaction
 {
     private TransactionId $id;
@@ -13,17 +9,19 @@ class Transaction
     private TransactionStatus $status;
 
     /**
-     * @param array $requestData
-     *
-     * @throws EmptyTransactionIdException
-     * @throws EmptyTransactionOperationException
-     * @throws EmptyTransactionStatusException
+     * @param TransactionId $transactionId
+     * @param TransactionOperation $transactionOperation
+     * @param TransactionStatus $transactionStatus
      */
-    public function __construct(array $requestData)
+    public function __construct(
+        TransactionId $transactionId,
+        TransactionOperation $transactionOperation,
+        TransactionStatus $transactionStatus
+    )
     {
-        $this->id = new TransactionId($requestData['id']);
-        $this->operation = new TransactionOperation($requestData['operation']);
-        $this->status = new TransactionStatus($requestData['status']);
+        $this->id = $transactionId;
+        $this->operation = $transactionOperation;
+        $this->status = $transactionStatus;
     }
 
     /**

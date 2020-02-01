@@ -10,6 +10,10 @@ use Lib\Factory\OrderFactoryInterface;
 
 class QueryBuilderOrderRepository implements OrderRepositoryInterface
 {
+    private const TABLE_NAME = 'order';
+    private const ID_FIELD_NAME = 'id';
+    private const STATUS_FIELD_NAME = 'status';
+
     private CI_DB_query_builder $db;
     private OrderFactoryInterface $orderFactory;
 
@@ -26,9 +30,9 @@ class QueryBuilderOrderRepository implements OrderRepositoryInterface
      */
     public function getById(OrderId $orderId): Order
     {
-        $this->db->select('status');
-        $this->db->where('id', $orderId->getValue());
-        $query = $this->db->get('order');
+        $this->db->select(self::STATUS_FIELD_NAME);
+        $this->db->where(self::ID_FIELD_NAME, $orderId->getValue());
+        $query = $this->db->get(self::TABLE_NAME);
 
         return $this->orderFactory->create([$query->result()]);
     }
@@ -39,16 +43,12 @@ class QueryBuilderOrderRepository implements OrderRepositoryInterface
     public function add(Order $order): OrderId
     {
         $orderId = $order->getId();
-
-        $data = [
-            'id' => $orderId->getValue(),
-            'status'  => $order->getStatus()->getValue(),
-        ];
+        $data = $order->toArray();
 
         if ($orderId->getValue()) {
-            $this->db->replace('order', $data);
+            $this->db->update(self::TABLE_NAME, $data);
         } else {
-            $this->db->insert('order', $data);
+            $this->db->insert(self::TABLE_NAME, $data);
             $orderId = new OrderId($this->db->insert_id());
         }
 
@@ -60,6 +60,7 @@ class QueryBuilderOrderRepository implements OrderRepositoryInterface
      */
     public function remove(OrderId $orderId): void
     {
-        $this->db->delete('order', ['id' => $orderId->getValue()]);
+        $data = [self::ID_FIELD_NAME => $orderId->getValue()];
+        $this->db->delete(self::TABLE_NAME, $data);
     }
 }

@@ -6,6 +6,7 @@ use Lib\Exception\EmptyOrderStatusException;
 
 class OrderStatus
 {
+    public const STATUS_DB_FIELD_SIZE = 10;
     private string $value;
 
     /**

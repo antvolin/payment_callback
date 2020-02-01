@@ -1,27 +1,28 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Migration_Add_order extends CI_Migration {
+use Lib\Entity\Order\OrderId;
+use Lib\Entity\Order\OrderStatus;
 
-    public function up()
+class Migration_Add_order extends CI_Migration
+{
+    public function up(): void
     {
         $this->dbforge->add_field(array(
             'id' => array(
-                'type' => 'INT',
-                'constraint' => 11,
-                'unsigned' => TRUE,
-                'auto_increment' => TRUE
+                'type' => 'VARCHAR',
+                'constraint' => OrderId::ID_DB_FIELD_SIZE,
             ),
             'status' => array(
                 'type' => 'VARCHAR',
-                'constraint' => '10',
+                'constraint' => OrderStatus::STATUS_DB_FIELD_SIZE,
             ),
         ));
         $this->dbforge->add_key('id', TRUE);
         $this->dbforge->create_table('order');
     }
 
-    public function down()
+    public function down(): void
     {
         $this->dbforge->drop_table('order');
     }

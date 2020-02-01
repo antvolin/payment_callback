@@ -2,14 +2,16 @@
 
 namespace Lib\Services;
 
+use Exception;
+
 trait Logger
 {
     /**
-     * @param string $msg
+     * @param Exception $e
      */
-    private function logError(string $msg): void
+    private function logError(Exception $e): void
     {
-        log_message('error', $msg);
+        log_message('error', $e->getMessage());
 
         exit;
     }

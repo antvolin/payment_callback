@@ -4,7 +4,7 @@ namespace Lib\Services;
 
 use Lib\Entity\Transaction\Transaction;
 
-class FailRedirectStrategy implements RedirectStrategyInterface
+class FailPayStrategy implements PayStrategyInterface
 {
     private Transaction $transaction;
 
@@ -16,11 +16,11 @@ class FailRedirectStrategy implements RedirectStrategyInterface
         $this->transaction = $transaction;
     }
 
-    public function redirect(): void
+    public function process(): void
     {
-        $transactionId = $this->transaction->getId();
-        $transactionOperation = $this->transaction->getOperation();
-        $transactionStatus = $this->transaction->getStatus();
+        $transactionId = $this->transaction->getId()->getValue();
+        $transactionOperation = $this->transaction->getOperation()->getValue();
+        $transactionStatus = $this->transaction->getStatus()->getValue();
 
         $transactionData = [
             'transaction_id' => $transactionId,
