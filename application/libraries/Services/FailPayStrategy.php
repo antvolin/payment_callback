@@ -27,8 +27,10 @@ class FailPayStrategy implements PayStrategyInterface
             'transaction_operation' => $transactionOperation,
             'transaction_status' => $transactionStatus,
         ];
+
         $CI =& get_instance();
         $CI->load->library('session');
+        $CI->load->helper('url');
         $CI->session->set_flashdata($transactionData);
 
         redirect('/page/sorry');

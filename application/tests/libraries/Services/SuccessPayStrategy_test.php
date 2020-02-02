@@ -1,22 +1,19 @@
 <?php
 
-//namespace Tests\libraries\Services;
-
 use Lib\Services\SuccessPayStrategy;
-//use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\TestCase;
 
 class SuccessPayStrategy_test extends TestCase
 {
     /**
      * @test
      */
-    public function shouldBeConstructable(): void
+    public function shouldBeRedirectToThankYouPage(): void
     {
+        $this->expectException(CIPHPUnitTestRedirectException::class);
+        $this->expectExceptionMessage('Redirect to /index.php/page/thank_you');
+
         $strategy = new SuccessPayStrategy();
-
         $strategy->process();
-
-        var_dump($this->CI->headers);
-        exit;
     }
 }

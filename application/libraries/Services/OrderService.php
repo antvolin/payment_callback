@@ -3,7 +3,7 @@
 namespace Lib\Services;
 
 use Lib\Entity\Order\Order;
-use Lib\Exception\EmptyOrderIdException;
+use Lib\Exception\OrderIdFieldSizeException;
 use Lib\Repository\OrderRepositoryInterface;
 
 class OrderService
@@ -22,7 +22,7 @@ class OrderService
     }
 
     /**
-     * @throws EmptyOrderIdException
+     * @throws OrderIdFieldSizeException
      */
     public function updateOrder(): void
     {
