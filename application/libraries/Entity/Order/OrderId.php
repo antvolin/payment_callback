@@ -2,7 +2,7 @@
 
 namespace Lib\Entity\Order;
 
-use Lib\Exception\EmptyOrderIdException;
+use Lib\Exception\OrderIdFieldSizeException;
 
 class OrderId
 {
@@ -12,12 +12,12 @@ class OrderId
     /**
      * @param string $value
      *
-     * @throws EmptyOrderIdException
+     * @throws OrderIdFieldSizeException
      */
     public function __construct(string $value)
     {
-        if (!$value) {
-            throw new EmptyOrderIdException();
+        if (self::ID_DB_FIELD_SIZE !== strlen($value)) {
+            throw new OrderIdFieldSizeException();
         }
 
         $this->value = $value;

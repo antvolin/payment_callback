@@ -1,22 +1,22 @@
 <?php
 
-namespace Tests\libraries\Entity\Order;
+namespace Tests\libraries\Entity\Transaction;
 
-use Lib\Entity\Order\OrderId;
-use Lib\Exception\OrderIdFieldSizeException;
+use Lib\Entity\Transaction\TransactionId;
+use Lib\Exception\TransactionIdFieldSizeException;
 use PHPUnit\Framework\TestCase;
 
-class OrderIdTest extends TestCase
+class TransactionIdTest extends TestCase
 {
     /**
      * @test
      *
-     * @throws OrderIdFieldSizeException
+     * @throws TransactionIdFieldSizeException
      */
     public function shouldBeConstructable(): void
     {
         $value = '1234567890123456';
-        $orderId = new OrderId($value);
+        $orderId = new TransactionId($value);
 
         $this->assertEquals($value, $orderId->getValue());
     }
@@ -24,23 +24,23 @@ class OrderIdTest extends TestCase
     /**
      * @test
      *
-     * @dataProvider notValidOrderIdValue
+     * @dataProvider notValidTransactionIdValue
      *
      * @param $value
      *
-     * @throws OrderIdFieldSizeException
+     * @throws TransactionIdFieldSizeException
      */
     public function shouldBeNotConstructableWithNotValidValue($value): void
     {
-        $this->expectException(OrderIdFieldSizeException::class);
+        $this->expectException(TransactionIdFieldSizeException::class);
 
-        new OrderId($value);
+        new TransactionId($value);
     }
 
     /**
      * @return array
      */
-    public function notValidOrderIdValue(): array
+    public function notValidTransactionIdValue(): array
     {
         return [
             [0],

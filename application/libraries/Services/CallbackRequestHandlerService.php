@@ -32,15 +32,8 @@ class CallbackRequestHandlerService
         $requestData = $this->getRequestData();
         $this->validateRequestDataParams($requestData);
         $this->updateOrder($requestData);
-
         $transaction = $this->createTransaction($requestData);
-        if ('fail' === $transaction->getStatus()->getValue()) {
-            $strategy = new FailPayStrategy($transaction);
-        } else {
-            $strategy = new SuccessPayStrategy();
-        }
-
-        $strategy->process();
+        $this->processingTransaction($transaction);
     }
 
     /**
@@ -124,5 +117,19 @@ class CallbackRequestHandlerService
         }
 
         return $transaction;
+    }
+
+    /**
+     * @param Transaction $transaction
+     */
+    private function processingTransaction(Transaction $transaction): void
+    {
+        if ('fail' === $transaction->getStatus()->getValue()) {
+            $strategy = new FailPayStrategy($transaction);
+        } else {
+            $strategy = new SuccessPayStrategy();
+        }
+
+        $strategy->process();
     }
 }

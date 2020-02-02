@@ -2,7 +2,7 @@
 
 namespace Lib\Entity\Order;
 
-use Lib\Exception\EmptyOrderStatusException;
+use Lib\Exception\OrderStatusFieldSizeException;
 
 class OrderStatus
 {
@@ -12,12 +12,12 @@ class OrderStatus
     /**
      * @param string $value
      *
-     * @throws EmptyOrderStatusException
+     * @throws OrderStatusFieldSizeException
      */
     public function __construct(string $value)
     {
-        if (!$value) {
-            throw new EmptyOrderStatusException();
+        if (self::STATUS_DB_FIELD_SIZE !== strlen($value)) {
+            throw new OrderStatusFieldSizeException();
         }
 
         $this->value = $value;
