@@ -19,11 +19,9 @@ class OrderFactory implements OrderFactoryInterface
         if (!$data) {
             throw new EmptyOrderInformationException();
         }
-
         if (!isset($data['order_id'])) {
             throw new NotFoundOrderIdException();
         }
-
         if (!isset($data['status'])) {
             throw new NotFoundOrderStatusException();
         }
