@@ -26,7 +26,8 @@ class OrderFactory implements OrderFactoryInterface
             throw new NotFoundOrderStatusException();
         }
 
-        $orderId = new OrderId($data['order_id']);
+        $id = $data['order_id'];
+        $orderId = $id ? new OrderId($id) : null;
         $orderStatus = new OrderStatus($data['status']);
 
         return new Order($orderId, $orderStatus);

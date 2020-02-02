@@ -2,6 +2,7 @@
 
 namespace Lib\Services;
 
+use CI_DB_query_builder;
 use Exception;
 use JsonException;
 use Lib\Entity\Transaction\Transaction;
@@ -18,13 +19,16 @@ class CallbackRequestHandlerService
     use Logger;
 
     private string $requestData;
+    private CI_DB_query_builder $queryBuilder;
 
     /**
      * @param string $requestData
+     * @param CI_DB_query_builder $queryBuilder
      */
-    public function __construct(string $requestData)
+    public function __construct(string $requestData, CI_DB_query_builder $queryBuilder)
     {
         $this->requestData = $requestData;
+        $this->queryBuilder = $queryBuilder;
     }
 
     public function handle(): void
@@ -91,14 +95,15 @@ class CallbackRequestHandlerService
     private function createOrderService(array $request): OrderService
     {
         $order = null;
+        $orderFactory = new OrderFactory();
 
         try {
-            $order = (new OrderFactory())->create($request['order']);
+            $order = $orderFactory->create($request['order']);
         } catch (Exception $e) {
             $this->logError($e);
         }
 
-        return new OrderService(new QueryBuilderOrderRepository(), $order);
+        return new OrderService(new QueryBuilderOrderRepository($this->queryBuilder, $orderFactory), $order);
     }
 
     /**

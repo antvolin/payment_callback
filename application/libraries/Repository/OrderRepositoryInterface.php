@@ -4,33 +4,33 @@ namespace Lib\Repository;
 
 use Lib\Entity\Order\Order;
 use Lib\Entity\Order\OrderId;
-use Lib\Exception\EmptyOrderIdException;
 use Lib\Exception\EmptyOrderInformationException;
-use Lib\Exception\EmptyOrderStatusException;
 use Lib\Exception\NotFoundOrderIdException;
 use Lib\Exception\NotFoundOrderStatusException;
+use Lib\Exception\OrderIdFieldSizeException;
+use Lib\Exception\OrderStatusFieldSizeException;
 
 interface OrderRepositoryInterface
 {
     /**
      * @param OrderId $orderId
      *
-     * @return Order
+     * @return Order|null
      *
-     * @throws EmptyOrderIdException
-     * @throws EmptyOrderStatusException
+     * @throws EmptyOrderInformationException
      * @throws NotFoundOrderIdException
      * @throws NotFoundOrderStatusException
-     * @throws EmptyOrderInformationException
+     * @throws OrderIdFieldSizeException
+     * @throws OrderStatusFieldSizeException
      */
-    public function getById(OrderId $orderId): Order;
+    public function getById(OrderId $orderId): ?Order;
 
     /**
      * @param Order $order
      *
      * @return OrderId
      *
-     * @throws EmptyOrderIdException
+     * @throws OrderIdFieldSizeException
      */
     public function add(Order $order): OrderId;
 

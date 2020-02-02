@@ -4,23 +4,23 @@ namespace Lib\Entity\Order;
 
 class Order
 {
-    private OrderId $id;
+    private ?OrderId $id;
     private OrderStatus $status;
 
     /**
-     * @param OrderId $orderId
+     * @param OrderId|null $orderId
      * @param OrderStatus $orderStatus
      */
-    public function __construct(OrderId $orderId, OrderStatus $orderStatus)
+    public function __construct(?OrderId $orderId, OrderStatus $orderStatus)
     {
         $this->id = $orderId;
         $this->status = $orderStatus;
     }
 
     /**
-     * @return OrderId
+     * @return OrderId|null
      */
-    public function getId(): OrderId
+    public function getId(): ?OrderId
     {
         return $this->id;
     }
@@ -31,7 +31,7 @@ class Order
     public function toArray(): array
     {
         return [
-            'id' => $this->id->getValue(),
+            'id' => $this->id ? $this->id->getValue() : null,
             'status' => $this->status->getValue(),
         ];
     }

@@ -5,7 +5,6 @@ namespace Lib\Repository;
 use CI_DB_query_builder;
 use Lib\Entity\Order\Order;
 use Lib\Entity\Order\OrderId;
-use Lib\Factory\OrderFactory;
 use Lib\Factory\OrderFactoryInterface;
 
 class QueryBuilderOrderRepository implements OrderRepositoryInterface
@@ -17,24 +16,38 @@ class QueryBuilderOrderRepository implements OrderRepositoryInterface
     private CI_DB_query_builder $db;
     private OrderFactoryInterface $orderFactory;
 
-    public function __construct()
+    /**
+     * @param CI_DB_query_builder $queryBuilder
+     * @param OrderFactoryInterface $orderFactory
+     */
+    public function __construct(CI_DB_query_builder $queryBuilder, OrderFactoryInterface $orderFactory)
     {
-        $CI =& get_instance();
-        $CI->load->database();
-        $this->db = $CI->db;
-        $this->orderFactory = new OrderFactory();
+        $this->db = $queryBuilder;
+        $this->orderFactory = $orderFactory;
     }
 
     /**
      * @inheritDoc
      */
-    public function getById(OrderId $orderId): Order
+    public function getById(OrderId $orderId): ?Order
     {
-        $this->db->select(self::STATUS_FIELD_NAME);
+        $select = sprintf('%s,%s', self::ID_FIELD_NAME, self::STATUS_FIELD_NAME);
+
+        $this->db->select($select);
         $this->db->where(self::ID_FIELD_NAME, $orderId->getValue());
         $query = $this->db->get(self::TABLE_NAME);
+        $result = $query->first_row();
 
-        return $this->orderFactory->create([$query->result()]);
+        if (!$result) {
+            return null;
+        }
+
+        $orderData = [
+            'order_id' => $result->id,
+            'status' => $result->status,
+        ];
+
+        return $this->orderFactory->create($orderData);
     }
 
     /**
@@ -45,11 +58,13 @@ class QueryBuilderOrderRepository implements OrderRepositoryInterface
         $orderId = $order->getId();
         $data = $order->toArray();
 
-        if ($orderId->getValue()) {
-            $this->db->update(self::TABLE_NAME, $data);
-        } else {
+        if (!$orderId || !$orderId->getValue()) {
+            $id = uniqid('id_', false);
+            $data = array_merge($data, ['id' => $id]);
             $this->db->insert(self::TABLE_NAME, $data);
-            $orderId = new OrderId($this->db->insert_id());
+            $orderId = new OrderId($id);
+        } else {
+            $this->db->update(self::TABLE_NAME, $data);
         }
 
         return $orderId;

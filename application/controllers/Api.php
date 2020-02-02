@@ -10,7 +10,7 @@ class Api extends CI_Controller
         $this->load->helper('url');
         $requestData = $this->input->get('requestData');
 
-        $requestHandler = new CallbackRequestHandlerService($requestData);
+        $requestHandler = new CallbackRequestHandlerService($requestData, $this->db);
         $requestHandler->handle();
 	}
 }
