@@ -32,7 +32,7 @@ class FailPayStrategy_test extends TestCase
      * @throws NotFoundTransactionStatusException
      * @throws TransactionIdFieldSizeException
      */
-    public function shouldBeConstructable(): void
+    public function transactionDataShouldBeWriteToSessionAndRedirectedToThankYouPage(): void
     {
         $id = '1234567890123456';
         $status = '1234567890';
