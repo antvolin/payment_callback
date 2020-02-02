@@ -47,7 +47,7 @@ class Api_test extends TestCase
         $repository = $this->getRepository();
         $repository->add($this->orderFail);
 
-        $this->request('POST', '/api/callback', ['requestData' => $this->buildSuccessRequestParam()]);
+        $this->request('POST', '/api/callback', [$this->buildSuccessRequestParam()]);
         $status = $this->request->getStatus();
 
         $this->assertEquals(302, $status['code']);
@@ -79,7 +79,7 @@ class Api_test extends TestCase
         $repository = $this->getRepository();
         $repository->add($this->orderSuccess);
 
-        $this->request('POST', '/api/callback', ['requestData' => $this->buildFailRequestParam()]);
+        $this->request('POST', '/api/callback', [$this->buildFailRequestParam()]);
         $status = $this->request->getStatus();
 
         $this->assertEquals(302, $status['code']);
@@ -109,30 +109,38 @@ class Api_test extends TestCase
     }
 
     /**
-     * @return string
+     * @return array
      */
-    private function buildSuccessRequestParam(): string
+    private function buildSuccessRequestParam(): array
     {
-        return sprintf(
-            '{"transaction":{"id":"%s","operation":"pay","status":"%s"},"order":{"order_id":"%s","status":"%s"}}',
-            $this->orderId->getValue(),
-            $this->statusSuccess->getValue(),
-            $this->orderId->getValue(),
-            $this->statusSuccess->getValue()
-        );
+        return [
+            'transaction' => [
+                'id' => $this->orderId->getValue(),
+                'operation' => 'pay',
+                'status' => $this->statusSuccess->getValue(),
+            ],
+            'order' => [
+                'order_id' => $this->orderId->getValue(),
+                'status' => $this->statusSuccess->getValue(),
+            ],
+        ];
     }
 
     /**
-     * @return string
+     * @return array
      */
-    private function buildFailRequestParam(): string
+    private function buildFailRequestParam(): array
     {
-        return sprintf(
-            '{"transaction":{"id":"%s","operation":"pay","status":"%s"},"order":{"order_id":"%s","status":"%s"}}',
-            $this->orderId->getValue(),
-            $this->statusFail->getValue(),
-            $this->orderId->getValue(),
-            $this->statusFail->getValue()
-        );
+        return [
+            'transaction' => [
+                'id' => $this->orderId->getValue(),
+                'operation' => 'pay',
+                'status' => $this->statusFail->getValue(),
+            ],
+            'order' => [
+                'order_id' => $this->orderId->getValue(),
+                'status' => $this->statusFail->getValue(),
+            ],
+        ];
     }
 }

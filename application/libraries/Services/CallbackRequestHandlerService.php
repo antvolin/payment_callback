@@ -4,11 +4,9 @@ namespace Lib\Services;
 
 use CI_DB_query_builder;
 use Exception;
-use JsonException;
 use Lib\Entity\Transaction\Transaction;
-use Lib\Exception\EmptyRequestDataException;
-use Lib\Exception\EncodingRequestDataException;
 use Lib\Exception\NotFoundOrderInformationException;
+use Lib\Exception\NotFoundRequestDataException;
 use Lib\Exception\NotFoundTransactionInformationException;
 use Lib\Factory\OrderFactory;
 use Lib\Factory\TransactionFactory;
@@ -18,87 +16,60 @@ class CallbackRequestHandlerService
 {
     use Logger;
 
-    private string $requestData;
+    private array $requestData;
     private CI_DB_query_builder $queryBuilder;
 
     /**
-     * @param string $requestData
+     * @param array|null $requestData
      * @param CI_DB_query_builder $queryBuilder
      */
-    public function __construct(string $requestData, CI_DB_query_builder $queryBuilder)
+    public function __construct(?array $requestData, CI_DB_query_builder $queryBuilder)
     {
-        $this->requestData = $requestData;
+        if (!$requestData) {
+            $this->logError(new NotFoundRequestDataException());
+        }
+
+        $this->requestData = reset($requestData);
         $this->queryBuilder = $queryBuilder;
     }
 
     public function handle(): void
     {
-        $requestData = $this->getRequestData();
-        $this->validateRequestDataParams($requestData);
-        $this->updateOrder($requestData);
-        $transaction = $this->createTransaction($requestData);
+        $this->validateRequestDataParams();
+        $this->updateOrder();
+        $transaction = $this->createTransaction();
         $this->processingTransaction($transaction);
     }
 
-    /**
-     * @return array
-     */
-    private function getRequestData(): array
+    private function validateRequestDataParams(): void
     {
-        $request = [];
-
-        if (!$this->requestData) {
-            $this->logError(new EmptyRequestDataException());
-        }
-
-        try {
-            /* if the response from the gateway will change in the future,
-            then it is necessary to encapsulate the request in a separate object */
-            $request = json_decode($this->requestData, true, 512, JSON_THROW_ON_ERROR);
-        } catch (JsonException $e) {
-            $this->logError(new EncodingRequestDataException($e->getMessage()));
-        }
-
-        return $request;
-    }
-
-    /**
-     * @param array $request
-     */
-    private function validateRequestDataParams(array $request): void
-    {
-        if (!isset($request['transaction'])) {
+        if (!isset($this->requestData['transaction'])) {
             $this->logError(new NotFoundTransactionInformationException());
         }
-        if (!isset($request['order'])) {
+        if (!isset($this->requestData['order'])) {
             $this->logError(new NotFoundOrderInformationException());
         }
     }
 
-    /**
-     * @param array $requestData
-     */
-    private function updateOrder(array $requestData): void
+    private function updateOrder(): void
     {
         try {
-            $this->createOrderService($requestData)->updateOrder();
+            $this->createOrderService()->updateOrder();
         } catch (Exception $e) {
             $this->logError($e);
         }
     }
 
     /**
-     * @param array $request
-     *
      * @return OrderService
      */
-    private function createOrderService(array $request): OrderService
+    private function createOrderService(): OrderService
     {
         $order = null;
         $orderFactory = new OrderFactory();
 
         try {
-            $order = $orderFactory->create($request['order']);
+            $order = $orderFactory->create($this->requestData['order']);
         } catch (Exception $e) {
             $this->logError($e);
         }
@@ -107,16 +78,14 @@ class CallbackRequestHandlerService
     }
 
     /**
-     * @param array $request
-     *
      * @return Transaction
      */
-    private function createTransaction(array $request): Transaction
+    private function createTransaction(): Transaction
     {
         $transaction = null;
 
         try {
-            $transaction = (new TransactionFactory())->create($request['transaction']);
+            $transaction = (new TransactionFactory())->create($this->requestData['transaction']);
         } catch (Exception $e) {
             $this->logError($e);
         }

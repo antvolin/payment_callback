@@ -7,9 +7,7 @@ class Api extends CI_Controller
 {
 	public function callback(): void
     {
-        $requestData = $this->input->post('requestData');
-
-        $requestHandler = new CallbackRequestHandlerService($requestData, $this->db);
+        $requestHandler = new CallbackRequestHandlerService($this->input->post(), $this->db);
         $requestHandler->handle();
 	}
 }

@@ -59,6 +59,7 @@ class QueryBuilderOrderRepository_test extends TestCase
     {
         $id = $this->repository->add($this->order);
         $orderFromRepository = $this->repository->getById($id);
+        $this->repository->remove($id);
 
         $this->assertEquals($id, $orderFromRepository->getId());
     }
