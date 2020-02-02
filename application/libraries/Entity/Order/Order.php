@@ -26,6 +26,14 @@ class Order
     }
 
     /**
+     * @return OrderStatus
+     */
+    public function getStatus(): OrderStatus
+    {
+        return $this->status;
+    }
+
+    /**
      * @return array
      */
     public function toArray(): array

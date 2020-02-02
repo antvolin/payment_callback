@@ -9,7 +9,7 @@ class CallbackRequestHandlerService_test extends TestCase
     /**
      * @test
      */
-    public function shouldBeConstructable(): void
+    public function incomplete(): void
     {
         $this->markTestIncomplete();
     }

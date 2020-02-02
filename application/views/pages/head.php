@@ -2,7 +2,7 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 ?><head>
     <meta charset="utf-8">
-    <title>Transaction success</title>
+    <title>Order page</title>
     <style type="text/css">
         body {
             background-color: #fff;

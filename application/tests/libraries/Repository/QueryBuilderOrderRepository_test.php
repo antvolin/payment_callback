@@ -42,7 +42,7 @@ class QueryBuilderOrderRepository_test extends TestCase
      */
     public function shouldBeConstructable(): void
     {
-        $this->assertObjectHasAttribute('db', $this->repository);
+        $this->assertObjectHasAttribute('queryBuilder', $this->repository);
         $this->assertObjectHasAttribute('orderFactory', $this->repository);
     }
 

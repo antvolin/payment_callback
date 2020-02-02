@@ -13,7 +13,7 @@ class QueryBuilderOrderRepository implements OrderRepositoryInterface
     private const ID_FIELD_NAME = 'id';
     private const STATUS_FIELD_NAME = 'status';
 
-    private CI_DB_query_builder $db;
+    private CI_DB_query_builder $queryBuilder;
     private OrderFactoryInterface $orderFactory;
 
     /**
@@ -22,7 +22,7 @@ class QueryBuilderOrderRepository implements OrderRepositoryInterface
      */
     public function __construct(CI_DB_query_builder $queryBuilder, OrderFactoryInterface $orderFactory)
     {
-        $this->db = $queryBuilder;
+        $this->queryBuilder = $queryBuilder;
         $this->orderFactory = $orderFactory;
     }
 
@@ -32,10 +32,9 @@ class QueryBuilderOrderRepository implements OrderRepositoryInterface
     public function getById(OrderId $orderId): ?Order
     {
         $select = sprintf('%s,%s', self::ID_FIELD_NAME, self::STATUS_FIELD_NAME);
-
-        $this->db->select($select);
-        $this->db->where(self::ID_FIELD_NAME, $orderId->getValue());
-        $query = $this->db->get(self::TABLE_NAME);
+        $this->queryBuilder->select($select);
+        $this->queryBuilder->where(self::ID_FIELD_NAME, $orderId->getValue());
+        $query = $this->queryBuilder->get(self::TABLE_NAME);
         $result = $query->first_row();
 
         if (!$result) {
@@ -58,13 +57,14 @@ class QueryBuilderOrderRepository implements OrderRepositoryInterface
         $orderId = $order->getId();
         $data = $order->toArray();
 
-        if (!$orderId || !$orderId->getValue()) {
+        if (!$orderId) {
             $id = uniqid('id_', false);
             $data = array_merge($data, ['id' => $id]);
-            $this->db->insert(self::TABLE_NAME, $data);
+            $this->queryBuilder->insert(self::TABLE_NAME, $data);
             $orderId = new OrderId($id);
         } else {
-            $this->db->update(self::TABLE_NAME, $data);
+            $this->queryBuilder->where('id', $orderId->getValue());
+            $this->queryBuilder->update(self::TABLE_NAME, $data);
         }
 
         return $orderId;
@@ -76,6 +76,6 @@ class QueryBuilderOrderRepository implements OrderRepositoryInterface
     public function remove(OrderId $orderId): void
     {
         $data = [self::ID_FIELD_NAME => $orderId->getValue()];
-        $this->db->delete(self::TABLE_NAME, $data);
+        $this->queryBuilder->delete(self::TABLE_NAME, $data);
     }
 }

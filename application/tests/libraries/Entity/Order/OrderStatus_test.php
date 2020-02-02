@@ -3,7 +3,7 @@
 namespace Tests\libraries\Entity\Order;
 
 use Lib\Entity\Order\OrderStatus;
-use Lib\Exception\OrderStatusFieldSizeException;
+use Lib\Exception\EmptyOrderStatusException;
 use PHPUnit\Framework\TestCase;
 
 class OrderStatus_test extends TestCase
@@ -11,7 +11,7 @@ class OrderStatus_test extends TestCase
     /**
      * @test
      *
-     * @throws OrderStatusFieldSizeException
+     * @throws EmptyOrderStatusException
      */
     public function shouldBeConstructable(): void
     {
@@ -28,11 +28,11 @@ class OrderStatus_test extends TestCase
      *
      * @param $value
      *
-     * @throws OrderStatusFieldSizeException
+     * @throws EmptyOrderStatusException
      */
     public function shouldBeNotConstructableWithNotValidValue($value): void
     {
-        $this->expectException(OrderStatusFieldSizeException::class);
+        $this->expectException(EmptyOrderStatusException::class);
 
         new OrderStatus($value);
     }
@@ -45,10 +45,6 @@ class OrderStatus_test extends TestCase
         return [
             [0],
             [''],
-            ['dsa'],
-            ['dsadnmklqwenldsadnm-123njk123m,.asd'],
-            [111],
-            [true],
             [false],
         ];
     }
