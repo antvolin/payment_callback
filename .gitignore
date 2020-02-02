@@ -15,6 +15,3 @@ application/logs/*
 !application/logs/index.html
 !application/logs/.htaccess
 /vendor/
-
-application/tests/.phpunit.result.cache
-application/tests/build
