@@ -4,10 +4,10 @@ namespace Lib\Factory;
 
 use Lib\Entity\Order\Order;
 use Lib\Exception\EmptyOrderInformationException;
+use Lib\Exception\EmptyOrderStatusException;
 use Lib\Exception\NotFoundOrderIdException;
 use Lib\Exception\NotFoundOrderStatusException;
 use Lib\Exception\OrderIdFieldSizeException;
-use Lib\Exception\OrderStatusFieldSizeException;
 
 interface OrderFactoryInterface
 {
@@ -19,8 +19,8 @@ interface OrderFactoryInterface
      * @throws EmptyOrderInformationException
      * @throws NotFoundOrderIdException
      * @throws NotFoundOrderStatusException
+     * @throws EmptyOrderStatusException
      * @throws OrderIdFieldSizeException
-     * @throws OrderStatusFieldSizeException
      */
     public function create(array $data): Order;
 }

@@ -20,7 +20,10 @@ class QueryBuilderOrderRepository implements OrderRepositoryInterface
      * @param CI_DB_query_builder $queryBuilder
      * @param OrderFactoryInterface $orderFactory
      */
-    public function __construct(CI_DB_query_builder $queryBuilder, OrderFactoryInterface $orderFactory)
+    public function __construct(
+        CI_DB_query_builder $queryBuilder,
+        OrderFactoryInterface $orderFactory
+    )
     {
         $this->queryBuilder = $queryBuilder;
         $this->orderFactory = $orderFactory;

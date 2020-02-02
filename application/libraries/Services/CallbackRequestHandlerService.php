@@ -23,7 +23,10 @@ class CallbackRequestHandlerService
      * @param array|null $requestData
      * @param CI_DB_query_builder $queryBuilder
      */
-    public function __construct(?array $requestData, CI_DB_query_builder $queryBuilder)
+    public function __construct(
+        ?array $requestData,
+        CI_DB_query_builder $queryBuilder
+    )
     {
         if (!$requestData) {
             $this->logError(new NotFoundRequestDataException());
@@ -74,7 +77,9 @@ class CallbackRequestHandlerService
             $this->logError($e);
         }
 
-        return new OrderService(new QueryBuilderOrderRepository($this->queryBuilder, $orderFactory), $order);
+        $repository = new QueryBuilderOrderRepository($this->queryBuilder, $orderFactory);
+
+        return new OrderService($repository, $order);
     }
 
     /**
@@ -85,7 +90,8 @@ class CallbackRequestHandlerService
         $transaction = null;
 
         try {
-            $transaction = (new TransactionFactory())->create($this->requestData['transaction']);
+            $factory = new TransactionFactory();
+            $transaction = $factory->create($this->requestData['transaction']);
         } catch (Exception $e) {
             $this->logError($e);
         }

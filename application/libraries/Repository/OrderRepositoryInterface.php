@@ -5,10 +5,10 @@ namespace Lib\Repository;
 use Lib\Entity\Order\Order;
 use Lib\Entity\Order\OrderId;
 use Lib\Exception\EmptyOrderInformationException;
+use Lib\Exception\EmptyOrderStatusException;
 use Lib\Exception\NotFoundOrderIdException;
 use Lib\Exception\NotFoundOrderStatusException;
 use Lib\Exception\OrderIdFieldSizeException;
-use Lib\Exception\OrderStatusFieldSizeException;
 
 interface OrderRepositoryInterface
 {
@@ -18,10 +18,10 @@ interface OrderRepositoryInterface
      * @return Order|null
      *
      * @throws EmptyOrderInformationException
+     * @throws EmptyOrderStatusException
      * @throws NotFoundOrderIdException
      * @throws NotFoundOrderStatusException
      * @throws OrderIdFieldSizeException
-     * @throws OrderStatusFieldSizeException
      */
     public function getById(OrderId $orderId): ?Order;
 
