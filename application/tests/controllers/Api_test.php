@@ -3,14 +3,10 @@
 use Lib\Entity\Order\Order;
 use Lib\Entity\Order\OrderId;
 use Lib\Entity\Order\OrderStatus;
-use Lib\Exception\EmptyOrderInformationException;
 use Lib\Exception\EmptyOrderStatusException;
-use Lib\Exception\NotFoundOrderIdException;
-use Lib\Exception\NotFoundOrderStatusException;
 use Lib\Exception\OrderIdFieldSizeException;
-use Lib\Exception\OrderStatusFieldSizeException;
-use Lib\Factory\OrderFactory;
-use Lib\Repository\QueryBuilderOrderRepository;
+use Lib\Repository\Repository;
+use Lib\Repository\RepositoryInterface;
 
 class Api_test extends TestCase
 {
@@ -35,12 +31,6 @@ class Api_test extends TestCase
 
     /**
      * @test
-     *
-     * @throws EmptyOrderInformationException
-     * @throws NotFoundOrderIdException
-     * @throws NotFoundOrderStatusException
-     * @throws OrderIdFieldSizeException
-     * @throws OrderStatusFieldSizeException
      */
     public function callbackMethodShouldBeProcessedTheRequestIfOrderStatusSuccess(): void
     {
@@ -67,12 +57,6 @@ class Api_test extends TestCase
 
     /**
      * @test
-     *
-     * @throws EmptyOrderInformationException
-     * @throws NotFoundOrderIdException
-     * @throws NotFoundOrderStatusException
-     * @throws OrderIdFieldSizeException
-     * @throws OrderStatusFieldSizeException
      */
     public function callbackMethodShouldBeProcessedTheRequestIfOrderStatusFail(): void
     {
@@ -98,14 +82,11 @@ class Api_test extends TestCase
     }
 
     /**
-     * @return QueryBuilderOrderRepository
+     * @return RepositoryInterface
      */
-    private function getRepository(): QueryBuilderOrderRepository
+    private function getRepository(): RepositoryInterface
     {
-        $this->resetInstance();
-        $queryBuilder = $this->CI->db;
-
-        return new QueryBuilderOrderRepository($queryBuilder, new OrderFactory());
+        return Repository::getInstance();
     }
 
     /**

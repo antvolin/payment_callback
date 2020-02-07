@@ -3,8 +3,7 @@
 namespace Tests\libraries\Services;
 
 use Lib\Entity\Order\Order;
-use Lib\Exception\OrderIdFieldSizeException;
-use Lib\Repository\QueryBuilderOrderRepository;
+use Lib\Repository\QueryBuilderRepository;
 use Lib\Services\OrderService;
 use PHPUnit\Framework\TestCase;
 
@@ -12,13 +11,11 @@ class OrderService_test extends TestCase
 {
     /**
      * @test
-     *
-     * @throws OrderIdFieldSizeException
      */
     public function workShouldBeDelegatedToRepository(): void
     {
         $order = $this->createMock(Order::class);
-        $repository = $this->getMockBuilder(QueryBuilderOrderRepository::class)
+        $repository = $this->getMockBuilder(QueryBuilderRepository::class)
             ->disableOriginalConstructor()
             ->onlyMethods(['add'])
             ->getMock();

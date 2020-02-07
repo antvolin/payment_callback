@@ -2,7 +2,6 @@
 
 namespace Lib\Services;
 
-use CI_DB_query_builder;
 use Exception;
 use Lib\Entity\Transaction\Transaction;
 use Lib\Exception\NotFoundOrderInformationException;
@@ -10,22 +9,22 @@ use Lib\Exception\NotFoundRequestDataException;
 use Lib\Exception\NotFoundTransactionInformationException;
 use Lib\Factory\OrderFactory;
 use Lib\Factory\TransactionFactory;
-use Lib\Repository\QueryBuilderOrderRepository;
+use Lib\Repository\RepositoryInterface;
 
 class CallbackRequestHandlerService
 {
     use Logger;
 
     private array $requestData;
-    private CI_DB_query_builder $queryBuilder;
+    private RepositoryInterface $repository;
 
     /**
      * @param array|null $requestData
-     * @param CI_DB_query_builder $queryBuilder
+     * @param RepositoryInterface $repository
      */
     public function __construct(
         ?array $requestData,
-        CI_DB_query_builder $queryBuilder
+        RepositoryInterface $repository
     )
     {
         if (!$requestData) {
@@ -33,7 +32,7 @@ class CallbackRequestHandlerService
         }
 
         $this->requestData = reset($requestData);
-        $this->queryBuilder = $queryBuilder;
+        $this->repository = $repository;
     }
 
     public function handle(): void
@@ -77,9 +76,7 @@ class CallbackRequestHandlerService
             $this->logError($e);
         }
 
-        $repository = new QueryBuilderOrderRepository($this->queryBuilder, $orderFactory);
-
-        return new OrderService($repository, $order);
+        return new OrderService($this->repository, $order);
     }
 
     /**

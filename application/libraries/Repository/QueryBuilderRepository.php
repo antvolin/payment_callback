@@ -5,9 +5,14 @@ namespace Lib\Repository;
 use CI_DB_query_builder;
 use Lib\Entity\Order\Order;
 use Lib\Entity\Order\OrderId;
+use Lib\Exception\EmptyOrderInformationException;
+use Lib\Exception\EmptyOrderStatusException;
+use Lib\Exception\NotFoundOrderIdException;
+use Lib\Exception\NotFoundOrderStatusException;
+use Lib\Exception\OrderIdFieldSizeException;
 use Lib\Factory\OrderFactoryInterface;
 
-class QueryBuilderOrderRepository implements OrderRepositoryInterface
+class QueryBuilderRepository extends Repository
 {
     private const TABLE_NAME = 'order';
     private const ID_FIELD_NAME = 'id';
@@ -16,10 +21,6 @@ class QueryBuilderOrderRepository implements OrderRepositoryInterface
     private CI_DB_query_builder $queryBuilder;
     private OrderFactoryInterface $orderFactory;
 
-    /**
-     * @param CI_DB_query_builder $queryBuilder
-     * @param OrderFactoryInterface $orderFactory
-     */
     public function __construct(
         CI_DB_query_builder $queryBuilder,
         OrderFactoryInterface $orderFactory
@@ -30,7 +31,15 @@ class QueryBuilderOrderRepository implements OrderRepositoryInterface
     }
 
     /**
-     * @inheritDoc
+     * @param OrderId $orderId
+     *
+     * @return Order|null
+     *
+     * @throws EmptyOrderInformationException
+     * @throws EmptyOrderStatusException
+     * @throws NotFoundOrderIdException
+     * @throws NotFoundOrderStatusException
+     * @throws OrderIdFieldSizeException
      */
     public function getById(OrderId $orderId): ?Order
     {
@@ -53,7 +62,11 @@ class QueryBuilderOrderRepository implements OrderRepositoryInterface
     }
 
     /**
-     * @inheritDoc
+     * @param Order $order
+     *
+     * @return OrderId
+     *
+     * @throws OrderIdFieldSizeException
      */
     public function add(Order $order): OrderId
     {
@@ -61,7 +74,7 @@ class QueryBuilderOrderRepository implements OrderRepositoryInterface
         $data = $order->toArray();
 
         if (!$orderId) {
-            $id = uniqid('id_', false);
+            $id = $this->generateId();
             $data = array_merge($data, ['id' => $id]);
             $this->queryBuilder->insert(self::TABLE_NAME, $data);
             $orderId = new OrderId($id);
@@ -73,9 +86,6 @@ class QueryBuilderOrderRepository implements OrderRepositoryInterface
         return $orderId;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function remove(OrderId $orderId): void
     {
         $data = [self::ID_FIELD_NAME => $orderId->getValue()];
